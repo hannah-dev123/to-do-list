@@ -125,6 +125,9 @@ input {
 </style>
 <script>
 
+
+var dragEl = null;
+
 //drag and drop feature
 
 function allowDrop(ev) {
@@ -132,14 +135,33 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
+  dragEl = ev.target;
 }
 
 function drop(ev) {
   ev.preventDefault()
-  var data = ev.dataTransfer.getData("text");
-  ev.target.appendChild(document.getElementById(data));
+  ev.target.closest('ul').appendChild(dragEl);
+  save();
 }
+
+//web storage stuff
+function save() {
+  var list1 = document.getElementById('myUL').innerHTML
+  var list2 = document.getElementById('myUL2').innerHTML
+  localStorage.setItem('content1', list1);
+  localStorage.setItem('content2', list2);
+}
+
+
+function load() {
+  var list1 = document.getElementById('myUL');
+  var list2 = document.getElementById('myUL2');
+  var list1content = localStorage.getItem('content1');
+  var list2content = localStorage.getItem('content2');
+  list1.innerHTML = list1content;
+  list2.innerHTML = list2content;
+}
+
 </script>
 </head>
 <body>
@@ -153,26 +175,29 @@ function drop(ev) {
 <div class="column">
   <div class="title">
     <h3>To Do</h3>
-    <ul id="myUL">
-      <li>task 1</li>
-      <li class="checked">task 2</li>
+    <ul id="myUL" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <li  draggable="true" ondragstart="drag(event)">task 1</li>
+      <li class="checked" draggable="true" ondragstart="drag(event)">task 2</li>
     </ul>
   </div>
 </div>
 
 <div class="column">
   <div class="title">
-    <h3>Doing</h3>
-    <ul id="myUL2">
-      <li class="checked">task 3</li>
-      <li>task 4</li>
-      <li>task 5</li>
-      <li>task 6</li>
+    <h3>In Progress</h3>
+<div id="solution">
+    <ul id="myUL2"  ondrop="drop(event)" ondragover="allowDrop(event)">
+      <li class="checked" draggable="true" ondragstart="drag(event)">task 3</li>
+      <li draggable="true" ondragstart="drag(event)">task 4</li>
+      <li draggable="true" ondragstart="drag(event)">task 5</li>
+      <li draggable="true" ondragstart="drag(event)">task 6</li>
     </ul>
+</div>
   </div>
 </div>
 
 <script>
+load();
 //close button
 var myNodelist = document.getElementsByTagName("LI");
 var i;
@@ -205,6 +230,8 @@ list.addEventListener('click', function(ev) {
 //new list element
 function newElement() {
   var li = document.createElement("li");
+  li.setAttribute('draggable', 'true');
+  li.setAttribute('ondragstart', 'drag(event)');
   var inputValue = document.getElementById("myInput").value;
   var t = document.createTextNode(inputValue);
   li.appendChild(t);

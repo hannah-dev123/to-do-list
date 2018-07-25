@@ -217,6 +217,7 @@ for (i = 0; i < close.length; i++) {
     var div = this.parentElement;
     div.style.display = "none";
   }
+save();
 }
 
 //check symbol when item is clicked on
@@ -225,6 +226,7 @@ list.addEventListener('click', function(ev) {
   if (ev.target.tagName === 'LI') {
     ev.target.classList.toggle('checked');
   }
+save();
 }, false);
 
 //new list element
@@ -254,6 +256,7 @@ function newElement() {
       div.style.display = "none";
     }
   }
+save();
 }
 
 </script>
